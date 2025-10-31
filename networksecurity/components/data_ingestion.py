@@ -11,8 +11,8 @@ from sklearn.model_selection import train_test_split
 from dotenv import load_dotenv
 from networksecurity.entity.config_entity import DataIngestionConfig
 from networksecurity.entity.artifact_entity import DataIngestionArtifact
-
-load_dotenv()
+#This is a best practice to load. never write pass directly in the code instead put it in .env file that is never shared
+load_dotenv() # it looks for file named .env and loads the variable present in it
 MONGO_DB_URL = os.getenv('MONGO_DB_URL')
 
 class DataIngestion:
@@ -31,11 +31,11 @@ class DataIngestion:
             self.mongo_client = pymongo.MongoClient(MONGO_DB_URL)
             collection = self.mongo_client[database_name][collection_name]
 
-            df = pd.DataFrame(list(collection.find()))
+            df = pd.DataFrame(list(collection.find())) #collection.find() gets everything from the mongodb collection
             if '_id' in df.columns.to_list():
                 df = df.drop(columns=['_id'],axis = 1)
 
-            df.replace({'na':np.nan},inplace=True)
+            df.replace({'na':np.nan},inplace=True) #replcaes na with non a number
             return df
         
         except Exception as e:
@@ -44,8 +44,8 @@ class DataIngestion:
     def export_data_into_feature_store(self,dataframe: pd.DataFrame):
         try:
             feature_store_file_path = self.data_ingestion_config.feature_store_file_path
-            dir_path = os.path.dirname(feature_store_file_path)
-            os.makedirs(dir_path,exist_ok=True)
+            dir_path = os.path.dirname(feature_store_file_path) #finds the path
+            os.makedirs(dir_path,exist_ok=True)# makes the folder
             dataframe.to_csv(feature_store_file_path,index=False,header=True)
             return dataframe
         
