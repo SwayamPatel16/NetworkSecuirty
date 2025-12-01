@@ -9,18 +9,18 @@ from networksecurity.constant.training_pipeline import SCHEMA_FILE_PATH
 from networksecurity.utils.main_utils.utils import read_yaml_file, write_yaml_file
 
 class DataValidation: 
-    def __init__(self,data_ingestiom_artifact:DataIngestionArtifact,
+    def __init__(self,data_ingestion_artifact:DataIngestionArtifact,
                  data_validation_config:DataValidationArtifact):
         
         try:
-            self.data_ingestion_artifact = data_ingestiom_artifact
+            self.data_ingestion_artifact = data_ingestion_artifact
             self.data_validation_config = data_validation_config
             self._schema_config = read_yaml_file(SCHEMA_FILE_PATH)
         
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
-    def read_data(file_path)->pd.DataFrame:
+    def read_data(file_path)->pd.DataFrame: #takes a file path and returns dataframe
         try:
             return pd.read_csv(file_path)
         except Exception as e:
@@ -39,7 +39,7 @@ class DataValidation:
         except Exception as e:
             raise NetworkSecurityException(e,sys)
         
-    def detect_dataset_drift(self,base_df,current_df,threshold = 0.05)->bool:
+    def detect_dataset_drift(self,base_df,current_df,threshold = 0.05)->bool: #are the test materials from the same batch as train materials
         try:
             status = True
             report = {}
@@ -77,7 +77,7 @@ class DataValidation:
             train_dataframe = DataValidation.read_data(train_file_path)
             test_dataframe = DataValidation.read_data(test_file_path)
 
-            #validate n umber of columns
+            #validate number of columns
             status = self.validate_number_of_columns(dataframe=train_dataframe)
             if not status:
                 error_message = f" Train datafraome does not contain all the columns \n"

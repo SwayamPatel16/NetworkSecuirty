@@ -1,4 +1,5 @@
 import os
+import certifi
 from networksecurity.exception.exception import NetworkSecurityException
 from networksecurity.logging.logger import logging
 from networksecurity.entity.config_entity import DataIngestionConfig
@@ -14,6 +15,7 @@ from networksecurity.entity.artifact_entity import DataIngestionArtifact
 #This is a best practice to load. never write pass directly in the code instead put it in .env file that is never shared
 load_dotenv() # it looks for file named .env and loads the variable present in it
 MONGO_DB_URL = os.getenv('MONGO_DB_URL')
+ca = certifi.where()
 
 class DataIngestion:
     def __init__(self,data_ingestion_config:DataIngestionConfig):
