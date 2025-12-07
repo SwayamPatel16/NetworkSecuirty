@@ -50,11 +50,11 @@ class DataTransformation:
         logging.info("Entered intiate data transformation method of Data Transformation class")
         try:
             logging.info("Starting data transformation")
-            train_df = DataTransformation.read_csv(self.data_validation_artifact.valid_test_file_path)
+            train_df = DataTransformation.read_csv(self.data_validation_artifact.valid_train_file_path)
             test_df = DataTransformation.read_csv(self.data_validation_artifact.valid_test_file_path)
 
             input_feature_train_df = train_df.drop(columns=[TARGET_COLUMN],axis=1)
-            target_feature_train_df = test_df[TARGET_COLUMN]
+            target_feature_train_df = train_df[TARGET_COLUMN]
             target_feature_train_df = target_feature_train_df.replace(-1,0) #replaces -1 with 0 in result
 
             input_feature_test_df = test_df.drop(columns=[TARGET_COLUMN],axis=1)
@@ -69,11 +69,11 @@ class DataTransformation:
 
             train_arr = np.c_[transformed_input_train_feature, np.array(target_feature_train_df)] #will stack both the arrays
             test_arr = np.c_[transformed_input_test_feature, np.array(target_feature_test_df)]
-
-            save_numpy_array_data(self.data_transformation_config.transformed_train_file_path,array=train_arr)
-            save_numpy_array_data(self.data_transformation_config.transformed_object_file_path,array=test_arr)
+            
             save_object(self.data_transformation_config.transformed_object_file_path, preprocessor_object)
-
+            save_numpy_array_data(self.data_transformation_config.transformed_train_file_path,array=train_arr)
+            save_numpy_array_data(self.data_transformation_config.transformed_test_file_path,array=test_arr)
+            
             #it will return this
             data_transformation_artifact = DataTransformationArtifact(
                 transformed_object_file_path = self.data_transformation_config.transformed_object_file_path,
