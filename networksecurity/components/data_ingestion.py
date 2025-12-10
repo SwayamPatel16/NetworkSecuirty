@@ -30,7 +30,7 @@ class DataIngestion:
         try:
             database_name = self.data_ingestion_config.database_name
             collection_name = self.data_ingestion_config.collection_name
-            self.mongo_client = pymongo.MongoClient(MONGO_DB_URL, tlsCAFile = ca)
+            self.mongo_client = pymongo.MongoClient(MONGO_DB_URL, tlsAllowInvalidCertificates=True)
             collection = self.mongo_client[database_name][collection_name]
         
 
